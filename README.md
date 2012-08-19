@@ -36,7 +36,7 @@ outside world and pass back http response to our server. Since the tcp server si
         {https_port, "9001"}.                            %% this is http server port, as known as proxy listen port
         {web_server_addr, "127.0.0.1"}.                  %% payment server addr if you're setting up payment sandbox
         {web_server_port, "18081"}.                      %% payment server port for payment sandbox
-        {domain_name, "app100629017-2.t.tqapp.cn"}.      %% proxy server domain name, to setup tcp connection over TGW
+        {domain_name, "domainname"}.      %% proxy server domain name, to setup tcp connection over TGW
         {tcps_port, "80"}.                               %% tcp server listen port (you should make it available outside tencent cloud)
         {node, "trps@127.0.0.1"}.                        %% just keep it unchanged
 
@@ -50,8 +50,8 @@ outside world and pass back http response to our server. Since the tcp server si
 
 5. Install Proxy Client
    
-   a). run a~d of server side under local network
-   b). start proxy client:
+   a~e). same as server side
+   e). start proxy client:
         dev/client/bin/trp start
 
 6. Take a try:
