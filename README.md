@@ -57,8 +57,13 @@ outside world and pass back http response to our server. Since the tcp server si
 6. Take a try:
 
    update zypper:
+
    zypper service-delete 1
    http_proxy="http://proxy-addr:9001" zypper service-add http://ftp.hosteurope.de/mirror/ftp.opensuse.org/discontinued/SL-10.1/inst-source/
+
+   now:
+
+   http_proxy="http://proxy-addr:9001" zypper install git 
 
    Have fun with it!
 
