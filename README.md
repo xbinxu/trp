@@ -22,7 +22,7 @@ outside world and pass back http response to our server. Since the tcp server si
     
                                     | <== tencent TGW 
                   +------------+    |    +------------+ 
-    Internet <==> | trp client | <--|--> | trp server | <==> http client (zypper, curl, wget, etc) 
+    internet <==> | trp client | <--|--> | trp server | <==> http client (zypper, curl, wget, etc) 
                   +------------+    |    +------------+
                                     |  inside tencent cloud
 
