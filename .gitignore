@@ -1,0 +1,6 @@
+*.beam
+*.~*
+rel/trp
+dev
+makefile
+rel/vars
