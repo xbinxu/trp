@@ -28,11 +28,6 @@ client server:
 	mkdir -p dev
 	(cd rel && ../rebar -f generate target_dir=../dev/$@ overlay_vars=vars/$@.config)
 	
-deploy: devrel 
-	tar zvcf trps.tar.gz dev/server/lib/trp-1
-	lftp -u app100629017,app100629017 ftp-cvmgz00.opencloud.qq.com:53000 -e 'mput trps.tar.gz; quit'
-	
-sync:
-	rsync -r -e ssh --exclude=".git" --exclude="dev" --exclude="rel/trp" . xiaobin@192.168.12.14:~/trp
+
 	
 
