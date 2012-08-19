@@ -1,0 +1,4 @@
+*.beam
+*.~*
+rel/trp
+dev
