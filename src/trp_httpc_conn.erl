@@ -93,7 +93,7 @@ handle_cast(_Msg, State) ->
 %%          {stop, Reason, State}            (terminate/2 is called)
 %% --------------------------------------------------------------------
 handle_info({tcp, Socket, Bin}, #state{web_socket=Socket, conn_id=ConnId, scheme=http} = State) ->
-    ?DEBUG("receive message from web server: ~n ~p ~n", [Bin]),
+%%     ?DEBUG("receive message from web server: ~n ~p ~n", [Bin]),
     trp_tcpc_conn:send_message(Bin, ConnId),
     inet:setopts(Socket, [{active, once}]),
     {noreply, State};

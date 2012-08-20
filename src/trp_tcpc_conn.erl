@@ -165,16 +165,18 @@ handle_binary_message(_Sock, <<"pong">>) ->
 
 handle_binary_message(_Sock, MsgBody) ->
     {ConnId, Msg} = binary_to_term(MsgBody),
-    ?DEBUG("Receive Message From Proxy Server ~p: ~p ~n", [ConnId, Msg]),
+%%     ?DEBUG("Receive Message From Proxy Server ~p: ~p ~n", [ConnId, Msg]),
+    Msg1 = update_request(binary_to_list(Msg)),
     case ets:lookup(sock_table, ConnId) of
         [] ->
             {Scheme, WAddr, WPort} = parse_addr_port(binary_to_list(Msg)),
-            ?DEBUG("web server: ~p port: ~p", [WAddr, WPort]),
+%%             ?DEBUG("web server: ~p port: ~p", [WAddr, WPort]),
             {ok, Pid} = trp_httpc_conn:start_link(ConnId, WAddr, WPort, Scheme),
             ets:insert(sock_table, {ConnId, Pid}),
-            gen_server:cast(Pid, {send_message, Msg});
+%%             ?DEBUG("msg: ~p", [Msg1]),
+            gen_server:cast(Pid, {send_message, Msg1});
         [{ConnId, Pid}] ->
-            gen_server:cast(Pid, {send_message, Msg})
+            gen_server:cast(Pid, {send_message, Msg1})
         end.
 
 %%ping_message() ->
@@ -190,7 +192,6 @@ parse_addr_port(HttpRequest) ->
                 "CONNECT" -> "https://"++URI0;
                  _ -> URI0
                  end,
-            ?DEBUG("uri: ~p", [URI]),
             case http_uri:parse(URI) of
                 {ok, {Scheme, _UserInfo, Host, Port, _Path, _Query}} ->
                     {Scheme, Host, Port};
@@ -200,6 +201,19 @@ parse_addr_port(HttpRequest) ->
         _ ->
             default_addr_port()
         end.
+
+update_request(HttpRequest) ->
+    case re:run(HttpRequest, "^([^ ]+) ([^ ]+) ([^ ]+)", [{capture, [1, 2, 3], list}]) of
+        {match, [Method, URI, HttpVersion]} ->
+            case http_uri:parse(URI) of
+                {ok, {_Scheme, _UserInfo, _Host, _Port, Path, Query}} ->
+                    list_to_binary(Method ++ " " ++ Path ++ Query ++ " " ++ HttpVersion);
+                _ ->
+                    list_to_binary(HttpRequest)
+                end;
+        _ ->
+            list_to_binary(HttpRequest)
+        end.    
                 
 default_addr_port() ->
     {ok, Addr} = application:get_env(web_server_addr),
